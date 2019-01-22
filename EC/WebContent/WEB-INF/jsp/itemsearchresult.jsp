@@ -43,11 +43,13 @@
 						</div>
 					</div>
 				</div>
+				</c:forEach>
 				<c:if test="${(status.index + 1) % 4 == 0}">
+
 			</div>
 			<div class="row">
 				</c:if>
-				</c:forEach>
+
 			</div>
 		</div>
 		<div class="row center">
