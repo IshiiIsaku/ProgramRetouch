@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import base.DBManager;
 import beans.BuyDataBeans;
@@ -102,4 +104,209 @@ public class BuyDAO {
 		}
 	}
 
+	//表の表示
+
+	public  List<BuyDataBeans> hyou() throws SQLException {
+		Connection con = null;
+		PreparedStatement st = null;
+		List<BuyDataBeans> shousaiList = new ArrayList<BuyDataBeans>();
+		try {
+			con = DBManager.getConnection();
+
+			st = con.prepareStatement(
+					"SELECT * FROM t_buy JOIN m_delivery_method ON t_buy.delivery_method_id = m_delivery_method.id  ORDER BY t_buy.id DESC");
+
+			ResultSet rs = st.executeQuery();
+
+
+			while (rs.next()) {
+				BuyDataBeans bdb = new BuyDataBeans();
+
+				bdb.setId(rs.getInt("id"));
+				bdb.setTotalPrice(rs.getInt("total_price"));
+				bdb.setBuyDate(rs.getTimestamp("create_date"));
+				bdb.setDelivertMethodId(rs.getInt("delivery_method_id"));
+				bdb.setUserId(rs.getInt("user_id"));
+				bdb.setDeliveryMethodPrice(rs.getInt("price"));
+				bdb.setDeliveryMethodName(rs.getString("name"));
+
+
+
+				shousaiList.add(bdb);
+			}
+
+
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			throw new SQLException(e);
+		} finally {
+			if (con != null) {
+				con.close();
+			}
+		}
+
+		return shousaiList;
+	}
+
+
+
+
+
+
+	  //購入詳細
+
+	 public BuyDataBeans shousai(int id) throws SQLException{
+	        Connection con = null;
+	        PreparedStatement st = null;
+	        try {
+	            // データベースへ接続
+	        	con = DBManager.getConnection();
+
+
+	            // SELECT文を準備
+	        	st = con.prepareStatement("SELECT * FROM t_buy JOIN m_delivery_method ON t_buy.delivery_method_id = m_delivery_method.id WHERE t_buy.id=?");
+
+
+	             // SELECTを実行し、結果表を取得
+	            // 実行し、結果表を取得
+
+	        	st.setInt(1, id);
+
+	        	ResultSet rs = st.executeQuery();
+
+	             // 主キーに紐づくレコードは1件のみなので、rs.next()は1回だけ行う
+	            if (!rs.next()) {
+	                return null;
+	            }
+
+	            BuyDataBeans bdb = new BuyDataBeans();
+
+					bdb.setId(rs.getInt("id"));
+					bdb.setTotalPrice(rs.getInt("total_price"));
+					bdb.setBuyDate(rs.getTimestamp("create_date"));
+					bdb.setDelivertMethodId(rs.getInt("delivery_method_id"));
+					bdb.setUserId(rs.getInt("user_id"));
+					bdb.setDeliveryMethodPrice(rs.getInt("price"));
+					bdb.setDeliveryMethodName(rs.getString("name"));
+
+	            return bdb;
+
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	            return null;
+	        }
+
+
+	 }
+
+
+
+
+//	 public BuyDataBeans shousai(int id) {
+//	        Connection conn = null;
+//	        try {
+//	            // データベースへ接続
+//	            conn = DBManager.getConnection();
+//
+//	            // SELECT文を準備
+//	            String sql = "SELECT * FROM t_buy JOIN m_delivery_method ON t_buy.delivery_method_id = m_delivery_method.id WHERE t_buy.id="+"'"+id+"'";
+//	            //UserJouhoushousaiServlet?id=${user.loginId};
+//
+//	             // SELECTを実行し、結果表を取得
+//	            // 実行し、結果表を取得
+//	            PreparedStatement pStmt = conn.prepareStatement(sql);
+//	            pStmt.setInt(1,id);
+//
+//	            ResultSet rs = pStmt.executeQuery();
+//
+//	             // 主キーに紐づくレコードは1件のみなので、rs.next()は1回だけ行う
+//	            if (!rs.next()) {
+//	                return null;
+//	            }
+//
+//	            int id1=rs.getInt("id");
+//				int totalPrice=rs.getInt("total_price");
+//				Timestamp createDate=rs.getTimestamp("create_date");
+//				int deriveryMethod=rs.getInt("delivery_method_id");
+//				int userId=rs.getInt("user_id");
+//				int price=rs.getInt("price");
+//				String name=rs.getString("name");
+//
+//
+//	            return new BuyDataBeans(id1,totalPrice,createDate,deriveryMethod,userId,price,name);
+//
+//	        } catch (SQLException e) {
+//	            e.printStackTrace();
+//	            return null;
+//	        } finally {
+//	            // データベース切断
+//	            if (conn != null) {
+//	                try {
+//	                    conn.close();
+//	                } catch (SQLException e) {
+//	                    e.printStackTrace();
+//	                    return null;
+//	                }
+//	            }}}
+
+
+//商品詳細
+
+	            //sql=SELECT * FROM t_buy_detail JOIN m_item ON t_buy_detail.item_id=m_item.id WHERE t_buy_detail.buy_id=id
+
+public  List<BuyDataBeans> shouhin(int id) throws SQLException {
+	Connection con = null;
+	PreparedStatement st = null;
+	List<BuyDataBeans> shouhinList = new ArrayList<BuyDataBeans>();
+	try {
+		con = DBManager.getConnection();
+
+		st = con.prepareStatement(
+				"SELECT * FROM t_buy_detail JOIN m_item ON t_buy_detail.item_id=m_item.id WHERE t_buy_detail.buy_id=?");
+
+
+		st.setInt(1, id);
+		ResultSet rs = st.executeQuery();
+
+
+		while (rs.next()) {
+			BuyDataBeans bdb = new BuyDataBeans();
+
+
+			bdb.setId(rs.getInt("id"));
+			bdb.setBuyId(rs.getInt("buy_id"));
+			bdb.setId(rs.getInt("item_id"));
+			bdb.setName(rs.getString("name"));
+			bdb.setPrice(rs.getInt("price"));
+			bdb.setDeliveryMethodPrice(rs.getInt("price"));
+			bdb.setDeliveryMethodName(rs.getString("name"));
+
+			shouhinList.add(bdb);
+		}
+
+
+	} catch (SQLException e) {
+		System.out.println(e.getMessage());
+		throw new SQLException(e);
+	} finally {
+		if (con != null) {
+			con.close();
+		}
+	}
+
+	return shouhinList;
 }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
