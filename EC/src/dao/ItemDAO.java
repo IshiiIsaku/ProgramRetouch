@@ -121,8 +121,10 @@ public class ItemDAO {
 			else {
 
 				// 商品名検索
-				st = con.prepareStatement("SELECT * FROM m_item WHERE name LIKE '%"+searchWord+"%'");
+				st = con.prepareStatement("SELECT * FROM m_item WHERE name LIKE '%"+searchWord+"%'"+"ORDER BY id ASC LIMIT ?,?");
 
+				st.setInt(1, startiItemNum);
+				st.setInt(2, pageMaxItemCount);
 
 			}
 
