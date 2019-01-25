@@ -1,6 +1,7 @@
 package ec;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import beans.BuyDataBeans;
 import beans.UserDataBeans;
+import dao.BuyDAO;
 import dao.UserDAO;
 
 /**
@@ -22,6 +25,7 @@ import dao.UserDAO;
 public class UserData extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings({ "finally", "unchecked" })
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		// セッション開始
@@ -41,6 +45,18 @@ public class UserData extends HttpServlet {
 			request.setAttribute("validationMessage", validationMessage);
 			request.setAttribute("udb", udb);
 
+
+           //表を表示
+
+
+
+			BuyDAO buyDAO = new BuyDAO();
+
+			List<BuyDataBeans> hyouji = buyDAO.hyou();
+
+
+			request.setAttribute("hyouji",hyouji);
+
 			request.getRequestDispatcher(EcHelper.USER_DATA_PAGE).forward(request, response);
 
 		} catch (Exception e) {
@@ -48,6 +64,15 @@ public class UserData extends HttpServlet {
 			session.setAttribute("errorMessage", e.toString());
 			response.sendRedirect("Error");
 		}
-	}
 
+
+}
+
+
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
+
+	}
 }
