@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,32 +53,35 @@
 			<div class="col s12">
 				<div class="card grey lighten-5">
 					<div class="card-content">
+
 						<table class="bordered">
 							<thead>
 								<tr>
+
 									<th style="width: 10%"></th>
 									<th class="center">購入日時</th>
 									<th class="center">配送方法</th>
 									<th class="center">購入金額</th>
+
 								</tr>
 							</thead>
+                        <c:forEach var="hyouji" items="${hyouji}">
 							<tbody>
 
 								<tr>
-									<td class="center"><a href="UserBuyHistoryDetail?buy_id=1" class="btn-floating btn waves-effect waves-light "> <i class="material-icons">details</i></a></td>
-									<td class="center">1234年56月78日90時12分</td>
-									<td class="center">サンプル配送料金</td>
-									<td class="center"><123456789円円</td>
-								</tr>
-								<tr>
-									<td class="center"><a href="UserBuyHistoryDetail?buy_id=2" class="btn-floating btn waves-effect waves-light "> <i class="material-icons">details</i></a></td>
-									<td class="center">1234年56月78日90時12分</td>
-									<td class="center">サンプル配送料金</td>
-									<td class="center"><123456789円円</td>
+
+									<td class="center"><a href="UserBuyHistoryDetail?buy_id=${hyouji.id}" class="btn-floating btn waves-effect waves-light "> <i class="material-icons">details</i></a></td>
+									<td class="center"><fmt:formatDate value="${hyouji.buyDate}" pattern="yyyy年MM月dd日 HH時mm分" /></td>
+									<td class="center">${hyouji.deliveryMethodName}</td>
+									<td class="center">${hyouji.totalPrice}円</td>
+
 								</tr>
 
+
 							</tbody>
+					     </c:forEach>
 						</table>
+
 					</div>
 				</div>
 			</div>
